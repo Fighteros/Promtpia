@@ -1,5 +1,5 @@
-import { use } from "bcrypt/promises";
-import mongoos from "mongoose";
+
+import mongoose from "mongoose";
 
 let isConnected = false;
 
@@ -7,7 +7,7 @@ export const connectDB = async () => {
     mongoose.set('strictQuery', true);
 
 
-    if(isConnected){
+    if (isConnected) {
         console.log('MongoDB is already connected');
         return;
     }
@@ -21,10 +21,10 @@ export const connectDB = async () => {
         isConnected = true;
 
         console.log('MongoDB is connected ');
-        
+
     }
     catch (error) {
         console.error(`Error connecting to MongoDB: ${error.message}`);
-        
+
     }
 }

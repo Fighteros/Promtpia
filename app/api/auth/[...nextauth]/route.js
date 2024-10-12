@@ -15,41 +15,43 @@ const handler = NextAuth({
                 clientSecret: process.env.GOOGLE_CLIENT_SECRET,
             })
         ],
+    callbacks: {
+        async session({ session }) {
+            const sessionUser = await User.findOne({
+                email: session.user.email,
+            })
 
-    async session({ session }) {
-        const sessionUser = await User.findOne({
-            email: session.user.email,
-        })
-
-        session.user.id = sessionUser._id.toString();
-    }
-    ,
+            session.user.id = sessionUser._id.toString();
+        }
+        ,
 
 
-    async signIn({ profile }) {
-        try {
-            // Serverless -> lambda -> dynamodb
-            await connectDB();
+        async signIn({ profile }) {
+            try {
+                // Serverless -> lambda -> dynamodb
+                await connectDB();
 
-            // Check if user exists in db
-            const userExists = await User.findOne({
-                email: profile.email
-            });
+                // Check if user exists in db
+                const userExists = await User.findOne({
+                    email: profile.email
+                });
 
-            //if not , create user 
-            if (!userExists) {
-                await User.create({
-                    email: profile.email,
-                    Username: profile.name.replace(" ", "").toLowerCase(),
-                    image: profile.picture
-                })
 
+                //if not , create user 
+                if (!userExists) {
+                    await User.create({
+                        email: profile.email,
+                        username: profile.name.replace(" ", "").toLowerCase(),
+                        image: profile.picture
+                    })
+
+                }
+
+                return true;
+            } catch (err) {
+                console.log(err.message);
+                return false;
             }
-
-            return true;
-        } catch (err) {
-            console.log(err.message);
-            return false;
         }
     }
 })
