@@ -1,21 +1,56 @@
 import NextAuth from "next-auth";
 import GoogleProvider from 'next-auth/providers/google';
 
+import { connectDB } from "@utils/database";
+
+
+import User from "@models/user";
+
 
 const handler = NextAuth({
     providers:
         [
             GoogleProvider({
-                clientId: '',
-                clientSecret: '',
+                clientId: process.env.GOOGLE_ID,
+                clientSecret: process.env.GOOGLE_CLIENT_SECRET,
             })
         ],
-    async session({ session }) {
 
+    async session({ session }) {
+        const sessionUser = await User.findOne({
+            email: session.user.email,
+        })
+
+        session.user.id = sessionUser._id.toString();
     }
     ,
-    async signIn({ profile }) {
 
+
+    async signIn({ profile }) {
+        try {
+            // Serverless -> lambda -> dynamodb
+            await connectDB();
+
+            // Check if user exists in db
+            const userExists = await User.findOne({
+                email: profile.email
+            });
+
+            //if not , create user 
+            if (!userExists) {
+                await User.create({
+                    email: profile.email,
+                    Username: profile.name.replace(" ", "").toLowerCase(),
+                    image: profile.picture
+                })
+
+            }
+
+            return true;
+        } catch (err) {
+            console.log(err.message);
+            return false;
+        }
     }
 })
 
