@@ -22,3 +22,4 @@ export const POST = async (req) => {
         return new Response("Faild to create a new prompt", { status: 500 })
     }
 }
+
