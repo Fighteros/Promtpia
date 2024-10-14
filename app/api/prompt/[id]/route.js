@@ -40,10 +40,12 @@ export const DELETE = async (request, { params }) => {
     try {
         await connectDB();
 
-        const exitingPrompt = await Prompt.findByIdAndRemove(params.id);
+        const exitingPrompt = await Prompt.findByIdAndDelete(params.id);
+        if (!exitingPrompt) return new Response("Prompt not found", { status: 404 });
         return new Response(JSON.stringify({}), { status: 204 })
 
     } catch (error) {
+
         return new Response("Failed to delete prompt", { status: 500 })
     }
 }
