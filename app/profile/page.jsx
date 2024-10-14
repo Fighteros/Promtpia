@@ -29,7 +29,7 @@ const ProfilePage = () => {
 
 
     const handleEdit = async (post) => {
-
+        router.push(`/prompt/${post._id}/edit`);
     }
 
     const handleDelete = async (post) => {
