@@ -40,7 +40,6 @@ export const PUT = async (req, { params }) => {
 export const DELETE = async (request, { params }) => {
     try {
         await connectDB();
-
         const prompt = await Prompt.findByIdAndDelete(params.id);
         if (prompt) return new Response(JSON.stringify({}), { status: 204 });
         return new Response(`Couldn't find ${params.id}`, { status: 404 });
