@@ -34,17 +34,15 @@ const ProfilePage = () => {
     }
 
     const handleDelete = async (post) => {
+        const confirmed = confirm('Do Really want to delete this?');
         try {
-            const res = await fetch(`/api/prompt/${post._id}`,
+            const res = await fetch(`/api/prompt/${post._id.toString()}`,
                 {
                     method: 'DELETE'
                 }
             )
-
-            if (res.ok) {
-                console.log('delete')
-                setPosts(posts.filter(p => p._id !== post._id));
-            }
+            const newPosts = posts.filter(p => p._id !== post._id);
+            if (confirmed) setPosts(newPosts)
         } catch (err) {
             console.log(err.message)
         }
