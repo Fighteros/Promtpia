@@ -19,25 +19,63 @@ const PromptCardList = ({ data, handleTagClick }) => {
 
 
 const Feed = () => {
-  const [posts, setPosts] = useState([]);
+  const [allPosts, setAllPosts] = useState([]);
+
+  // Search vars
   const [searchText, setSearchText] = useState('');
+  const [searchTimeout, setSearchTimeout] = useState(null);
+  const [searchResult, setSearchResult] = useState([]);
 
-  const handleSearchChange = (e) => {
 
+
+  // Fetch posts
+  const fetchPosts = async () => {
+    const response = await fetch('/api/prompt');
+    const data = await response.json();
+
+
+    // set all posts 
+    setAllPosts(data);
   }
 
 
+  // fetch posts once when component load
   useEffect(() => {
-    const fetchPosts = async () => {
-      const res = await fetch('/api/prompt');
-      const data = await res.json();
-
-      setPosts(data);
-    }
-
     fetchPosts();
   }, [])
 
+
+  // handle search 
+
+  const handleSearchChange = (e) => {
+    clearTimeout(searchTimeout);
+
+    const searchTerm = e.target.value;
+    // assign  input
+    setSearchText(searchTerm);
+
+    setSearchTimeout(() => {
+      setSearchResult(filterPosts(searchText));
+    }, 500)
+  }
+
+  // filter and search 
+  const filterPosts = (searchTerm) => {
+    // "i" case insensitive
+    const regex = new RegExp(searchTerm, "i");
+    return allPosts.filter((p) => (
+      regex.test(p.creator.username) ||
+      regex.test(p.prompt) ||
+      regex.test(p.tag))
+    );
+  }
+
+
+  // handle tag click 
+
+  const handleTagClick = () => {
+
+  }
 
 
   return (
@@ -53,10 +91,18 @@ const Feed = () => {
           className="search_input peer"
         />
       </form>
-      <PromptCardList
-        data={posts}
-        handleTagClick={() => { }}
-      />
+
+      {/* All prompts */}
+      {searchText ? (<PromptCardList
+        data={searchResult}
+        handleTagClick={handleTagClick}
+      />) : (
+        <PromptCardList
+          data={allPosts}
+          handleTagClick={handleTagClick}
+        />
+      )}
+
     </section>
   )
 }
