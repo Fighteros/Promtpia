@@ -73,8 +73,10 @@ const Feed = () => {
 
   // handle tag click 
 
-  const handleTagClick = () => {
+  const handleTagClick = (tag) => {
+    setSearchText(tag);
 
+    setSearchResult(filterPosts(tag));
   }
 
 

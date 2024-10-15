@@ -1,29 +1,32 @@
 'use client'
 
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+
 import { useState, useEffect } from 'react';
 
 import Profile from '@components/Profile';
 
-const ProfilePage = () => {
-    const [posts, setPosts] = useState([])
-    const { data: session } = useSession();
-    const router = useRouter();
+const ProfilePage = ({ params }) => {
+    const [user, setUser] = useState(null);
+    const [posts, setPosts] = useState([]);
+    // should add loading 
+    
+    const { id } = params;
 
+    const fetchPosts = async () => {
+        const response1 = await fetch(`/api/users/${id}/`)
+        const response2 = await fetch(`/api/users/${id}/posts`)
+
+
+        const data1 = await response1.json();
+        const data2 = await response2.json();
+
+        setUser(data1);
+        setPosts(data2);
+    }
 
     useEffect(() => {
-        const fetchPosts = async () => {
-            const response = await fetch(`/api/users/${session?.user.id}/posts`)
-            const data = await response.json();
-
-            setPosts(data);
-        }
-
-        if (session?.user.id) fetchPosts();
-
+        fetchPosts();
     }, [])
-
 
 
 
@@ -33,7 +36,7 @@ const ProfilePage = () => {
     }
 
     const handleDelete = async (post) => {
-        const hasConfirmed = confirm("Are you sure you want to delete this prompt?");
+        const hasConfirmed = confirm("Are you sure you want to Delete this prompt?");
         if (hasConfirmed) {
             try {
                 await fetch(`/api/prompt/${post._id.toString()}`, {
@@ -50,10 +53,11 @@ const ProfilePage = () => {
         }
     }
 
+
     return (
         <Profile
-            name="My"
-            desc="Welcome to your personalized profile page"
+            name={user?.username}
+            desc={`Welcome to ${user?.username} personalized profile page`}
             data={posts}
             handleEdit={handleEdit}
             handleDelete={handleDelete}
