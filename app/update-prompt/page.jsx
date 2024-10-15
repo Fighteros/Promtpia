@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense } from 'react'
 
 import Form from "@components/Form";
 
@@ -63,13 +64,15 @@ const UpdatePrompt = () => {
 
 
     return (
-        <Form
-            post={post}
-            type="Edit"
-            setPost={setPost}
-            submitting={submitting}
-            handleSubmit={updatePrompt}
-        />
+        <Suspense>
+            <Form
+                post={post}
+                type="Edit"
+                setPost={setPost}
+                submitting={submitting}
+                handleSubmit={updatePrompt}
+            />
+        </Suspense>
     )
 }
 
