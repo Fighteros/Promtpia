@@ -7,7 +7,7 @@ const Profile = ({
   desc,
   data,
   handleEdit,
-  handleDelete
+  handleDelete,
 }) => {
   return (
     <section className="w-full">
