@@ -64,16 +64,20 @@ const UpdatePrompt = () => {
 
 
     return (
-        <Suspense>
-            <Form
-                post={post}
-                type="Edit"
-                setPost={setPost}
-                submitting={submitting}
-                handleSubmit={updatePrompt}
-            />
-        </Suspense>
+        <Form
+            post={post}
+            type="Edit"
+            setPost={setPost}
+            submitting={submitting}
+            handleSubmit={updatePrompt}
+        />
     )
 }
 
-export default UpdatePrompt
+
+
+const page = () => <Suspense>
+    <UpdatePrompt />
+</Suspense>
+
+export default page
