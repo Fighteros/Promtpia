@@ -2,14 +2,16 @@
 
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 import Profile from '@components/Profile';
 
 const ProfilePage = ({ params }) => {
+    const router = useRouter();
     const [user, setUser] = useState(null);
     const [posts, setPosts] = useState([]);
     // should add loading 
-    
+
     const { id } = params;
 
     const fetchPosts = async () => {
