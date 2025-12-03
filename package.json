@@ -13,7 +13,7 @@
     "mongodb": "^6.9.0",
     "mongoose": "^8.9.5",
     "next": "14.2.33",
-    "next-auth": "^4.24.8",
+    "next-auth": "^4.24.13",
     "react": "^18",
     "react-css-spinners": "^4.0.2",
     "react-dom": "^18"
